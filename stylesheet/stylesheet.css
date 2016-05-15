@@ -1,0 +1,23 @@
+#superdiv{
+	width:809px;
+	height:500px;
+	margin-left:auto;
+	margin-right: auto;
+	border-style: ridge;
+	border-width: 3px;
+	border-color: gray;
+}
+
+html{
+	background-image: url(../images/metal.png);
+}
+#rationale{
+	width:809px;
+	margin-left: auto;
+	margin-right: auto;
+	border-style: ridge;
+	border-width: 3px;
+	border-color: gray;
+	color:#989898;
+	font-family: "Trebuchet MS", Helvetica, sans-serif;
+}

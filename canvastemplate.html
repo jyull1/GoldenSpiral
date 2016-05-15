@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html>
+	<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+	<title>Golden Spiral</title>
+	<link rel="stylesheet" href="stylesheet/stylesheet.css" type="text/css">
+	<script src="js/modernizr.js"></script>
+	<script>
+	//Check if the page has fully loaded, and execute the eventWindowLoaded function when it has
+	window.addEventListener("load",eventWindowLoaded, false);
+	
+	//The eventWindowLoaded() function, which calls the canvasapp() function when it is executed
+	function eventWindowLoaded() {
+		canvasApp();	
+	}
+	
+	//Function to check for Canvas Support using modernizr.js
+	function canvasSupport() {
+		return Modernizr.canvas;	
+	}
+	
+	//The canvasApp() function where our canvas code will go
+	function canvasApp() {
+		
+		//Check to see if the canvas has a context (the drawing surface defined by the web browser to support canvas functionality)
+		if (!canvasSupport()) {
+			return;	
+		}
+		
+		//Reference for the canvas object
+		var theCanvas = document.getElementById("canvasOne");
+				
+		//get the context
+		var context = theCanvas.getContext("2d");
+	
+		//window.addEventListener("keydown", eventKeyPressed, true);
+		
+		//The game loop function
+		function gameLoop(){
+			window.setTimeout(gameLoop,1000);
+			drawCanvas();
+		}
+
+		function getRandom(small, large){
+			var rand = Math.random();
+
+			rand *= (large - small);
+			rand += small;
+			rand = Math.floor(rand);
+
+			return rand;
+
+		}
+
+		function getColor(){
+			var red = getRandom(0,255);
+			var blue = getRandom(0,255);
+			var green = getRandom(0,255);
+
+			var color = "rgb(" + red + ", " + blue + ", " + green + ")";
+
+			return color;
+		}
+
+		//My variables
+		var canvasHeight = 500;
+		var canvasWidth = 809;
+		var dimensions = 809;
+		var xpos = 0;
+		var ypos = 500;
+		var cornerCounter = 0;
+		var timeCounter = 0;
+		var arcPointx = 809;
+		var arcPointy = 0;
+		var grd = context.createRadialGradient(xpos + dimensions*0.5,ypos + dimensions*0.5,dimensions*0.05,xpos + dimensions*0.5,ypos + dimensions*0.5,dimensions);
+		grd.addColorStop(0,"red");
+		grd.addColorStop(1,"black");
+
+		//The draw stuff function
+		function drawCanvas(){
+
+			if(cornerCounter == 18){
+				context.clearRect(0,0,809,500);
+				dimensions = 809;
+				xpos = 0;
+				ypos = 500;
+				cornerCounter = 0;
+				arcPointx = 809;
+				arcPointy = 0;
+			}
+			
+			if(cornerCounter % 4 == 0){
+
+				dimensions /= 1.618;
+				context.beginPath();
+				context.stroke();
+				ypos -= dimensions;
+				grd = context.createRadialGradient(xpos + dimensions*0.5,ypos + dimensions*0.5,dimensions*0.05,xpos + dimensions*0.5,ypos + dimensions*0.5,dimensions);
+				grd.addColorStop(0,getColor());
+				grd.addColorStop(1,"black");
+				context.fillStyle = grd;
+				context.fillRect(xpos,ypos,dimensions,dimensions);
+				arcPointx = xpos + dimensions;
+				arcPointy = ypos + dimensions;
+				context.arc(arcPointx,arcPointy,dimensions,Math.PI,1.5*Math.PI);
+				context.strokeStyle = "white";
+				context.stroke();
+				cornerCounter ++;
+
+			}
+			else if(cornerCounter % 4 == 1){
+				
+				xpos += dimensions;
+				dimensions /= 1.618;
+				grd = context.createRadialGradient(xpos + dimensions*0.5,ypos + dimensions*0.5,dimensions*0.05,xpos + dimensions*0.5,ypos + dimensions*0.5,dimensions);
+				grd.addColorStop(0,getColor());
+				grd.addColorStop(1,"black");
+				context.fillStyle = grd;
+				context.fillRect(xpos,ypos,dimensions,dimensions);
+				arcPointx = xpos;
+				arcPointy = ypos + dimensions;
+				context.arc(arcPointx,arcPointy,dimensions, 1.5*Math.PI, 2*Math.PI);
+				context.strokeStyle = "white";
+				context.stroke();
+				cornerCounter++;
+
+			}
+			else if(cornerCounter % 4 == 2){
+
+				ypos += dimensions;
+				dimensions /= 1.618;
+				xpos += (Math.round(dimensions/1.618));
+				grd = context.createRadialGradient(xpos + dimensions*0.5,ypos + dimensions*0.5,dimensions*0.05,xpos + dimensions*0.5,ypos + dimensions*0.5,dimensions);
+				grd.addColorStop(0,getColor());
+				grd.addColorStop(1,"black");
+				context.fillStyle = grd;
+				context.fillRect(xpos,ypos,dimensions,dimensions);
+				arcPointx = xpos;
+				arcPointy = ypos;
+				context.arc(arcPointx,arcPointy,dimensions, 0, 0.5*Math.PI);
+				context.strokeStyle = "white";
+				context.stroke();
+				cornerCounter++;
+			}
+			else{
+				xpos -= Math.round(dimensions/1.618);
+				dimensions /= 1.618;
+				ypos += (Math.round(dimensions/1.618));
+				grd = context.createRadialGradient(xpos + dimensions*0.5,ypos + dimensions*0.5,dimensions*0.05,xpos + dimensions*0.5,ypos + dimensions*0.5,dimensions);
+				grd.addColorStop(0,getColor());
+				grd.addColorStop(1,"black");
+				context.fillStyle = grd;
+				context.fillRect(xpos,ypos,dimensions,dimensions);
+				arcPointx = xpos + dimensions;
+				arcPointy = ypos;
+				context.arc(arcPointx,arcPointy,dimensions, 0.5*Math.PI, Math.PI);
+				context.strokeStyle = "white";
+				context.stroke();
+				cornerCounter++;
+			}
+
+			
+
+
+		}		
+		gameLoop();		
+		
+	}
+	
+	</script>
+</head>
+
+<body>
+		<div id="superdiv">
+        <!-- Canvas -->
+        <canvas id="canvasOne" width="809" height="500">
+            Your browser doesn't support Canvas.
+        </canvas>    
+        <!-- ^ End Canvas -->
+        </div>
+        <div id="rationale">
+        	<p>
+        		This design was inspired by a natural formation known as the Golden Spiral. The Golden Spiral is common in nature, most famously on the shells of snails and related mollusks. The Golden Spiral can be constructed out of a series of squares, as shown above. Each square has a side length equal to the space left over by the square before it. Once a curved line is drawn between two diagonal points on the square, an arc is formed that can be continued on the next square. The formation of new squares can be continued to infinity, as can the drawing of the arc. You would essentially be forever spiralling inward to an ever-smaller space - assuming you don't run out of pixels, which in this case we do.
+        	</p>
+        	<p>
+        		The mathematical construction aside, the rest of these choices were purely aesthetic. The darkening gradient in each of the squares helps them to mesh with the black background, while the gray border separates the series nicely. Because most of the squares are a dark color due to the gradient, a white curve line is more easily distinguishable.
+        	</p>
+        </div>
+</body>
+</html>
